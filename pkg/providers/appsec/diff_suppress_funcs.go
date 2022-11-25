@@ -81,6 +81,14 @@ func compareReputationProfileCondition(rpOld, rpNew appsec.CreateReputationProfi
 	if len(cOld.AtomicConditions) != len(cNew.AtomicConditions) {
 		return false
 	}
+
+	return areReputationProfilesEqual(rpOld, rpNew)
+}
+
+// areReputationProfilesEqual check whether old and new reputation profiles are the same
+func areReputationProfilesEqual(rpOld, rpNew appsec.CreateReputationProfileResponse) bool {
+	cOld := rpOld.Condition
+	cNew := rpNew.Condition
 	for _, acOld := range cOld.AtomicConditions {
 		found := false
 		for _, acNew := range cNew.AtomicConditions {

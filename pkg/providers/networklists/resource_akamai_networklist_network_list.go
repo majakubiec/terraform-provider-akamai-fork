@@ -105,50 +105,27 @@ func resourceNetworkListCreate(ctx context.Context, d *schema.ResourceData, m in
 
 	createNetworkList := networklists.CreateNetworkListRequest{}
 
-	name, err := tools.GetStringValue("name", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+	var n networkListAttrs
+	attrs, err := n.getAttributes(d)
+	if err != nil {
 		return diag.FromErr(err)
 	}
-	createNetworkList.Name = name
 
-	listType, err := tools.GetStringValue("type", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	createNetworkList.Type = listType
+	createNetworkList.Name = attrs.name
+	createNetworkList.Type = attrs.listType
+	createNetworkList.Description = attrs.description
+	createNetworkList.ContractID = attrs.contractID
+	createNetworkList.GroupID = attrs.groupID
 
-	description, err := tools.GetStringValue("description", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	createNetworkList.Description = description
-
-	contractID, err := tools.GetStringValue("contract_id", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	createNetworkList.ContractID = contractID
-
-	groupID, err := tools.GetIntValue("group_id", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	createNetworkList.GroupID = groupID
-
-	if len(contractID) > 0 || groupID > 0 {
-		if len(contractID) == 0 || groupID == 0 {
+	if len(attrs.contractID) > 0 || attrs.groupID > 0 {
+		if len(attrs.contractID) == 0 || attrs.groupID == 0 {
 			return diag.Errorf("If either a contract_id or group_id is provided, both must be provided")
 		}
 	}
 
-	mode, err := tools.GetStringValue("mode", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-
 	getNetworkLists := networklists.GetNetworkListsRequest{}
-	getNetworkLists.Name = name
-	getNetworkLists.Type = listType
+	getNetworkLists.Name = attrs.name
+	getNetworkLists.Type = attrs.listType
 
 	networklists, err := client.GetNetworkLists(ctx, getNetworkLists)
 	if err != nil {
@@ -165,7 +142,7 @@ func resourceNetworkListCreate(ctx context.Context, d *schema.ResourceData, m in
 
 	finallist := make([]string, 0, len(netlist.List()))
 
-	switch mode {
+	switch attrs.mode {
 	case Remove:
 		for _, hl := range netlist.List() {
 			for _, h := range networklists.NetworkLists {
@@ -218,15 +195,15 @@ func resourceNetworkListCreate(ctx context.Context, d *schema.ResourceData, m in
 		return diag.Errorf("%s: %s", tools.ErrValueSet, err.Error())
 	}
 
-	if err := d.Set("mode", mode); err != nil {
+	if err := d.Set("mode", attrs.mode); err != nil {
 		return diag.Errorf("%s: %s", tools.ErrValueSet, err.Error())
 	}
 
-	if err := d.Set("contract_id", contractID); err != nil {
+	if err := d.Set("contract_id", attrs.contractID); err != nil {
 		return diag.Errorf("%s: %s", tools.ErrValueSet, err.Error())
 	}
 
-	if err := d.Set("group_id", groupID); err != nil {
+	if err := d.Set("group_id", attrs.groupID); err != nil {
 		return diag.Errorf("%s: %s", tools.ErrValueSet, err.Error())
 	}
 
@@ -243,45 +220,22 @@ func resourceNetworkListUpdate(ctx context.Context, d *schema.ResourceData, m in
 	updateNetworkList := networklists.UpdateNetworkListRequest{}
 	updateNetworkList.UniqueID = d.Id()
 
-	name, err := tools.GetStringValue("name", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+	var n networkListAttrs
+	attrs, err := n.getAttributes(d)
+	if err != nil {
 		return diag.FromErr(err)
 	}
-	updateNetworkList.Name = name
 
-	listType, err := tools.GetStringValue("type", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	updateNetworkList.Type = listType
+	updateNetworkList.Name = attrs.name
+	updateNetworkList.Type = attrs.listType
+	updateNetworkList.Description = attrs.description
+	updateNetworkList.ContractID = attrs.contractID
+	updateNetworkList.GroupID = attrs.groupID
 
-	description, err := tools.GetStringValue("description", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	updateNetworkList.Description = description
-
-	contractID, err := tools.GetStringValue("contract_id", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	updateNetworkList.ContractID = contractID
-
-	groupID, err := tools.GetIntValue("group_id", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
-	}
-	updateNetworkList.GroupID = groupID
-
-	if len(contractID) > 0 || groupID > 0 {
-		if len(contractID) == 0 || groupID == 0 {
+	if len(attrs.contractID) > 0 || attrs.groupID > 0 {
+		if len(attrs.contractID) == 0 || attrs.groupID == 0 {
 			return diag.Errorf("If either a contract_id or group_id is provided, both must be provided")
 		}
-	}
-
-	mode, err := tools.GetStringValue("mode", d)
-	if err != nil && !errors.Is(err, tools.ErrNotFound) {
-		return diag.FromErr(err)
 	}
 
 	listRequest := networklists.GetNetworkListRequest{}
@@ -302,7 +256,7 @@ func resourceNetworkListUpdate(ctx context.Context, d *schema.ResourceData, m in
 
 	finallist := make([]string, 0, len(netlist.List()))
 
-	switch mode {
+	switch attrs.mode {
 	case Remove:
 		for _, hl := range netlist.List() {
 
@@ -342,11 +296,11 @@ func resourceNetworkListUpdate(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
-	if err := d.Set("contract_id", contractID); err != nil {
+	if err := d.Set("contract_id", attrs.contractID); err != nil {
 		return diag.Errorf("%s: %s", tools.ErrValueSet, err.Error())
 	}
 
-	if err := d.Set("group_id", groupID); err != nil {
+	if err := d.Set("group_id", attrs.groupID); err != nil {
 		return diag.Errorf("%s: %s", tools.ErrValueSet, err.Error())
 	}
 
@@ -399,43 +353,7 @@ func resourceNetworkListRead(ctx context.Context, d *schema.ResourceData, m inte
 		logger.Errorf("calling 'getNetworkList': %s", err.Error())
 		return diag.FromErr(err)
 	}
-
-	switch mode {
-	case Remove:
-		for _, hl := range netlist.List() {
-			for _, h := range networklist.List {
-
-				if strings.EqualFold(h, hl.(string)) {
-					finalldata = append(finalldata, strings.ToLower(h))
-				}
-			}
-		}
-
-		if len(finalldata) == 0 {
-			for _, hl := range netlist.List() {
-				finalldata = append(finalldata, strings.ToLower(hl.(string)))
-			}
-		}
-
-	case Append:
-		for _, h := range networklist.List {
-
-			for _, hl := range netlist.List() {
-				if strings.EqualFold(h, hl.(string)) {
-					finalldata = append(finalldata, strings.ToLower(h))
-				}
-			}
-		}
-	case Replace:
-		for _, h := range networklist.List {
-			finalldata = append(finalldata, strings.ToLower(h))
-		}
-	default:
-		for _, h := range networklist.List {
-			finalldata = append(finalldata, strings.ToLower(h))
-		}
-	}
-
+	finalldata = resolveNetworkList(mode, netlist, networklist, finalldata)
 	sort.Strings(finalldata)
 
 	if err := d.Set("sync_point", networklist.SyncPoint); err != nil {
@@ -490,6 +408,93 @@ func resourceNetworkListRead(ctx context.Context, d *schema.ResourceData, m inte
 	d.SetId(networklist.UniqueID)
 
 	return nil
+}
+
+// networkListAttrs represent networkList attributes
+type networkListAttrs struct {
+	name        string
+	listType    string
+	description string
+	contractID  string
+	groupID     int
+	mode        string
+}
+
+// getAttributes fetches some attributes grouped together
+func (n networkListAttrs) getAttributes(d *schema.ResourceData) (*networkListAttrs, error) {
+	name, err := tools.GetStringValue("name", d)
+	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+		return nil, err
+	}
+	listType, err := tools.GetStringValue("type", d)
+	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+		return nil, err
+	}
+	description, err := tools.GetStringValue("description", d)
+	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+		return nil, err
+	}
+	contractID, err := tools.GetStringValue("contract_id", d)
+	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+		return nil, err
+	}
+	groupID, err := tools.GetIntValue("group_id", d)
+	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+		return nil, err
+	}
+	mode, err := tools.GetStringValue("mode", d)
+	if err != nil && !errors.Is(err, tools.ErrNotFound) {
+		return nil, err
+	}
+
+	return &networkListAttrs{
+		name:        name,
+		listType:    listType,
+		description: description,
+		contractID:  contractID,
+		groupID:     groupID,
+		mode:        mode,
+	}, nil
+}
+
+// resolveNetworkList resolves network list based on its mode
+func resolveNetworkList(mode string, netlist *schema.Set, networklist *networklists.GetNetworkListResponse, finalldata []string) []string {
+	switch mode {
+	case Remove:
+		for _, hl := range netlist.List() {
+			for _, h := range networklist.List {
+
+				if strings.EqualFold(h, hl.(string)) {
+					finalldata = append(finalldata, strings.ToLower(h))
+				}
+			}
+		}
+
+		if len(finalldata) == 0 {
+			for _, hl := range netlist.List() {
+				finalldata = append(finalldata, strings.ToLower(hl.(string)))
+			}
+		}
+
+	case Append:
+		for _, h := range networklist.List {
+
+			for _, hl := range netlist.List() {
+				if strings.EqualFold(h, hl.(string)) {
+					finalldata = append(finalldata, strings.ToLower(h))
+				}
+			}
+		}
+	case Replace:
+		for _, h := range networklist.List {
+			finalldata = append(finalldata, strings.ToLower(h))
+		}
+	default:
+		for _, h := range networklist.List {
+			finalldata = append(finalldata, strings.ToLower(h))
+		}
+	}
+	return finalldata
 }
 
 func appendIfMissing(slice []string, s string) []string {
