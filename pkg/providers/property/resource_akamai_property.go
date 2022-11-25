@@ -383,10 +383,6 @@ func rulesCustomDiff(_ context.Context, diff *schema.ResourceDiff, _ interface{}
 		return fmt.Errorf("cannot parse rules JSON from config: %s", err)
 	}
 
-	//rules, err := compareFields(&oldRulesUpdate, &newRulesUpdate)
-	//if err != nil {
-	//	return fmt.Errorf("cannot encode rules JSON %s", err)
-	//}
 	rulesBytes, err := json.Marshal(newRulesUpdate)
 	if err != nil {
 		return err

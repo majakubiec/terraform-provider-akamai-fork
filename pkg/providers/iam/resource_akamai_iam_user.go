@@ -546,21 +546,21 @@ func stateAuthGrantsJS(v interface{}) string {
 	return string(authGrantsJSON)
 }
 
-func suppressAuthGrantsJS(k, old, new string, _ *schema.ResourceData) bool {
-	if new == UnknownVariableValue {
+func suppressAuthGrantsJS(k, o, n string, _ *schema.ResourceData) bool {
+	if n == UnknownVariableValue {
 		return false
 	}
 
 	var oldAuthGrants []iam.AuthGrantRequest
-	if len(old) > 0 {
-		if err := json.Unmarshal([]byte(old), &oldAuthGrants); err != nil {
-			panic(fmt.Sprintf("previous value for %q: %q is not valid: %s", k, old, err))
+	if len(o) > 0 {
+		if err := json.Unmarshal([]byte(o), &oldAuthGrants); err != nil {
+			panic(fmt.Sprintf("previous value for %q: %q is not valid: %s", k, o, err))
 		}
 	}
 
 	var newAuthGrants []iam.AuthGrantRequest
-	if len(new) > 0 {
-		if err := json.Unmarshal([]byte(new), &newAuthGrants); err != nil {
+	if len(n) > 0 {
+		if err := json.Unmarshal([]byte(n), &newAuthGrants); err != nil {
 			panic(fmt.Sprintf("new value for %q: %q is not valid: %s", k, new, err))
 		}
 	}
@@ -572,14 +572,14 @@ func statePhone(v interface{}) string {
 	return canonicalPhone(v.(string))
 }
 
-func suppressPhone(_, oldPhone, newPhone string, _ *schema.ResourceData) bool {
-	oldPhone = regexp.MustCompile(`\D+`).ReplaceAllLiteralString(oldPhone, "")
-	newPhone = regexp.MustCompile(`\D+`).ReplaceAllLiteralString(newPhone, "")
-	return oldPhone == newPhone
+func suppressPhone(_, o, n string, _ *schema.ResourceData) bool {
+	o = regexp.MustCompile(`\D+`).ReplaceAllLiteralString(o, "")
+	n = regexp.MustCompile(`\D+`).ReplaceAllLiteralString(n, "")
+	return o == n
 }
 
-func suppressEmail(_, old, new string, _ *schema.ResourceData) bool {
-	return strings.EqualFold(old, new)
+func suppressEmail(_, o, n string, _ *schema.ResourceData) bool {
+	return strings.EqualFold(o, n)
 }
 
 func stateEmail(v interface{}) string {

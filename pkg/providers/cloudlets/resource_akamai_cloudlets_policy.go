@@ -115,8 +115,8 @@ func EnforcePolicyVersionChange(_ context.Context, diff *schema.ResourceDiff, _ 
 
 // EnforceMatchRulesChange enforces that any changes to match_rules will re compute the warnings
 func EnforceMatchRulesChange(_ context.Context, diff *schema.ResourceDiff, _ interface{}) error {
-	oldRules, newRules := diff.GetChange("match_rules")
-	if diffMatchRules(oldRules.(string), newRules.(string)) {
+	o, n := diff.GetChange("match_rules")
+	if diffMatchRules(o.(string), n.(string)) {
 		return nil
 	}
 	if err := diff.SetNewComputed("warnings"); err != nil {

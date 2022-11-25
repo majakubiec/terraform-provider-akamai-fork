@@ -87,11 +87,11 @@ func compareReputationProfileCondition(rpOld, rpNew appsec.CreateReputationProfi
 
 // areReputationProfilesEqual check whether old and new reputation profiles are the same
 func areReputationProfilesEqual(rpOld, rpNew appsec.CreateReputationProfileResponse) bool {
-	cOld := rpOld.Condition
-	cNew := rpNew.Condition
-	for _, acOld := range cOld.AtomicConditions {
+	o := rpOld.Condition
+	n := rpNew.Condition
+	for _, acOld := range o.AtomicConditions {
 		found := false
-		for _, acNew := range cNew.AtomicConditions {
+		for _, acNew := range n.AtomicConditions {
 			if acOld.ClassName == acNew.ClassName {
 				found = true
 				if acOld.CheckIps != acNew.CheckIps && acNew.CheckIps != "" {

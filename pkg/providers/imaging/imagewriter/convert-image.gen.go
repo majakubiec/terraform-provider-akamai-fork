@@ -958,7 +958,6 @@ func getShapeType(d *schema.ResourceData, key string) imaging.ShapeType {
 	panic(fmt.Sprint("unsupported type"))
 }
 
-//nolint:gocyclo
 func getTransformationType(d *schema.ResourceData, key string) imaging.TransformationType {
 	_, isAny := extract(d, key)
 

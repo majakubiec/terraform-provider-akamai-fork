@@ -43,9 +43,9 @@ func VerifyIDUnchanged(_ context.Context, d *schema.ResourceDiff, m interface{})
 	logger := meta.Log("APPSEC", "VerifyIDUnchanged")
 
 	if d.HasChange("config_id") {
-		oldConfig, newConfig := d.GetChange("config_id")
-		oldvalue := oldConfig.(int)
-		newvalue := newConfig.(int)
+		o, n := d.GetChange("config_id")
+		oldvalue := o.(int)
+		newvalue := n.(int)
 		if oldvalue > 0 {
 			logger.Errorf("%s value %d specified in configuration differs from resource ID's value %d", "config_id", newvalue, oldvalue)
 			return fmt.Errorf("%s value %d specified in configuration differs from resource ID's value %d", "config_id", newvalue, oldvalue)
