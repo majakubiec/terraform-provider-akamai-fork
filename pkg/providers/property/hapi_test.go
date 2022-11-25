@@ -2,6 +2,7 @@ package property
 
 import (
 	"context"
+
 	"github.com/akamai/AkamaiOPEN-edgegrid-golang/v2/pkg/hapi"
 	"github.com/stretchr/testify/mock"
 )
