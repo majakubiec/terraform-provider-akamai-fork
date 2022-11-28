@@ -12,7 +12,7 @@ fi
 # https://track.akamai.com/jira/browse/SECKSD-12824 is done
 packages=$(go list ./... | grep -v appsec)
 
-err_files=$($GOPATH/bin/errcheck -ignoretests \
+err_files=$($(go env GOPATH)/bin/errcheck -ignoretests \
                      -ignore 'github.com/hashicorp/terraform/helper/schema:Set' \
                      -ignore 'bytes:.*' \
                      -ignore 'io:Close|Write' \
