@@ -10,6 +10,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: My test
+        run:
+            echo $PATH
+            echo $GOPATH
+            echo $(go env GOPATH)
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up Go
