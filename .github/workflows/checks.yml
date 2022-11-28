@@ -22,6 +22,11 @@ jobs:
         run: make tools.terraform
       - name: Prepare dummy edgerc
         run: make dummy-edgerc
+      - name: My checks
+        run: |
+          echo $PATH
+          echo $GOPATH
+          echo $(go env GOPATH) 
       - name: Run checks
         run: make check
       - name: Run tests
