@@ -48,7 +48,7 @@ tidy:
 
 .PHONY: test
 test:
-	go test  -v $(TESTARGS) -timeout 30m   ./pkg/providers/property/... 2>&1
+	go test  -race -v $(TESTARGS) -timeout 30m   ./pkg/providers/property/... 2>&1
 
 .PHONY: testacc
 testacc:
