@@ -24,6 +24,8 @@ jobs:
             #  run: make build
         - name: Run tests
           run: make test
+        - name: Run tests 2
+          run: make test
         - name: Run terraform fmt check
           run: make terraform-fmtcheck
         - name: Run tflint
