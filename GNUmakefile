@@ -47,7 +47,7 @@ tidy:
 	@cd tools && go mod tidy
 
 .PHONY: test
-uest:
+test:
 	go test  -v $(TESTARGS) -timeout 30m -run "^TestDataContracts" ./pkg/providers/property/... 2>&1
 
 .PHONY: testacc
