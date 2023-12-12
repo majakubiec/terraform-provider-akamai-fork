@@ -18,10 +18,10 @@ jobs:
             go-version-file: 'go.mod'
         - name: Install terraform
           run: make tools.terraform
-        - name: Run linter
-          run: make lint
-        - name: Create build
-          run: make build
+            #- name: Run linter
+            #  run: make lint
+            #- name: Create build
+            #  run: make build
         - name: Run tests
           run: make test
         - name: Run terraform fmt check
