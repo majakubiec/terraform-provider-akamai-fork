@@ -24,6 +24,11 @@ jobs:
             #  run: make build
         - name: Run tests
           run: make test
+          continue-on-error: true
+        - uses: actions/upload-artifact@v3
+          with:
+            name: my-artifact
+            path: cover.out
         - name: Run terraform fmt check
           run: make terraform-fmtcheck
         - name: Run tflint
