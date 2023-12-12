@@ -12,7 +12,6 @@ import (
 )
 
 func TestDataSourceMultipleGroups_basic(t *testing.T) {
-	t.Skip()
 	t.Run("test output", func(t *testing.T) {
 		client := &papi.Mock{}
 		contractIDs := []string{"ctr_1234"}
@@ -31,7 +30,7 @@ func TestDataSourceMultipleGroups_basic(t *testing.T) {
 				ContractIDs:   contractIDs,
 			}}}}, nil)
 		useClient(client, nil, func() {
-			resource.ParallelTest(t, resource.TestCase{
+			resource.Test(t, resource.TestCase{
 				ProtoV5ProviderFactories: testAccProviders,
 				CheckDestroy:             testAccCheckAkamaiMultipleGroupsDestroy,
 				IsUnitTest:               true,
