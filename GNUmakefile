@@ -48,7 +48,7 @@ tidy:
 
 .PHONY: test
 uest:
-	go test  -v $(TESTARGS) -timeout 30m -run TestDataContracts ./pkg/providers/property/... 2>&1
+	go test  -v $(TESTARGS) -timeout 30m -run "^TestDataContracts" ./pkg/providers/property/... 2>&1
 
 .PHONY: testacc
 testacc:
