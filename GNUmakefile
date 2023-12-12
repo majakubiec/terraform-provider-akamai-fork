@@ -48,7 +48,7 @@ tidy:
 
 .PHONY: test
 test:
-	go test $(TEST) -v $(TESTARGS) -timeout 30m -run "TestDataSourceMultipleGroups_basic" ./pkg/providers/property/... 2>&1
+	go test $(TEST) -v $(TESTARGS) -timeout 30m  ./pkg/providers/property/... 2>&1
 
 .PHONY: testacc
 testacc:
