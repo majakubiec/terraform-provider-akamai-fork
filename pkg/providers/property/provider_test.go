@@ -26,7 +26,7 @@ var testAccFrameworkProvider provider.Provider
 
 func TestMain(m *testing.M) {
 	testAccPluginProvider = akamai.NewPluginProvider(NewPluginSubprovider())()
-	testAccFrameworkProvider = akamai.NewFrameworkProvider(NewFrameworkSubprovider())()
+	// testAccFrameworkProvider = akamai.NewFrameworkProvider(NewFrameworkSubprovider())()
 
 	testAccProviders = map[string]func() (tfprotov5.ProviderServer, error){
 		"akamai": func() (tfprotov5.ProviderServer, error) {
@@ -34,7 +34,8 @@ func TestMain(m *testing.M) {
 			providers := []func() tfprotov5.ProviderServer{
 				testAccPluginProvider.GRPCProvider,
 				providerserver.NewProtocol5(
-					testAccFrameworkProvider,
+					// testAccFrameworkProvider,
+					akamai.NewFrameworkProvider(NewFrameworkSubprovider())(),
 				),
 			}
 
