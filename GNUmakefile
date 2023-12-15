@@ -48,7 +48,7 @@ tidy:
 
 .PHONY: test
 test:
-	GORACE="halt_on_error=1" go test -coverprofile=cover.out -race -v $(TESTARGS) -timeout 30m   ./pkg/providers/property/... 2>&1
+	go mod tidy && GORACE="halt_on_error=1" go test -coverprofile=cover.out -race -v $(TESTARGS) -timeout 30m   ./pkg/providers/property/... 2>&1
 
 .PHONY: testacc
 testacc:

@@ -25,7 +25,18 @@ jobs:
             #  run: make build
         - name: Run tests
           run: make test
-          continue-on-error: false
+            #  continue-on-error: false
+            #- name: Setup upterm session
+            #  uses: lhotari/action-upterm@v1
+            #  with:
+            #    ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+            #    limit-access-to-actor: true
+            #    ## limits ssh access and adds the ssh public keys of the listed GitHub users
+            #    limit-access-to-users: majakubiec
+        - uses: actions/upload-artifact@v3
+          with:
+            name: test
+            path: file.zip
         - uses: actions/upload-artifact@v3
           with:
             name: my-artifact
